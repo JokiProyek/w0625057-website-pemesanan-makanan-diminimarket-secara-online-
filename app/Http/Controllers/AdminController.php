@@ -109,17 +109,13 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:vendors,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:3000',
+            'mobile' => ['required', 'digits_between:10,14', 'regex:/^08[0-9]+$/', 'unique:vendors'],
         ]);
 
         $vendor = new Vendor();
         $vendor->name = $request->name;
         $vendor->slug = str::slug($request->name);
-        $image = $request->file('image');
-        $file_extension = $request->file('image')->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-        $this->GenerateVendorThumbailsImage($image, $file_name);
-        $vendor->image = $file_name;
+        $vendor->mobile = $request->mobile;
         $vendor->save();
         return redirect()->route('admin.vendors')->with('status', 'Vendor has been added successfully');
     }
@@ -134,24 +130,15 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:vendors,slug,' . $request->id,
-            'image' => 'mimes:png,jpg,jpeg|max:3000',
+            'slug' => 'required|unique:vendors,slug',
+            'mobile' => ['required', 'digits_between:10,14', 'regex:/^08[0-9]+$/', 'unique:vendors'],
         ]);
+
         $vendor = Vendor::find($request->id);
-        $vendor = new Vendor();
         $vendor->name = $request->name;
         $vendor->slug = str::slug($request->name);
-        if ($request->hasFile('image')) {
-            if (File::exists(public_path('uploads/vendors') . '/' . $vendor->image)) {
-                File::delete(public_path('uploads/vendors') . '/' . $vendor->image);
-            }
-
-            $image = $request->file('image');
-            $file_extension = $request->file('image')->extension();
-            $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-            $this->GenerateVendorThumbailsImage($image, $file_name);
-            $vendor->image = $file_name;
-        }
+        $vendor->mobile = $request->mobile;
+       
         $vendor->save();
         return redirect()->route('admin.vendors')->with('status', 'Vendor has been updated successfully');
     }
@@ -198,17 +185,14 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'slug' => 'required|unique:categories,slug',
-            'image' => 'mimes:png,jpg,jpeg|max:3001',
+            'mobile' => ['digits_between:10,14', 'regex:/^08[0-9]+$/', 'unique:vendors'],
         ]);
 
         $category = new Category();
         $category->name = $request->name;
         $category->slug = str::slug($request->name);
-        $image = $request->file('image');
-        $file_extension = $request->file('image')->extension();
-        $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-        $this->GenerateCategoryThumbailsImage($image, $file_name);
-        $category->image = $file_name;
+        $category->mobile = $request->mobile;
+
         $category->save();
         return redirect()->route('admin.categories')->with('status', 'Category has been added successfully');
     }
@@ -236,22 +220,13 @@ class AdminController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'slug' => 'required|unique:categories,slug,' . $request->id,
-            'image' => 'mimes:png,jpg,jpeg|max:3000',
+            'slug' => 'required|unique:categories,slug',
+            'mobile' => ['digits_between:10,14', 'regex:/^08[0-9]+$/', 'unique:vendors'],
         ]);
         $category = Category::find($request->id);
         $category->name = $request->name;
         $category->slug = str::slug($request->name);
-        if ($request->hasFile('image')) {
-            if (File::exists(public_path('uploads/categories') . '/' . $category->image)) {
-                File::delete(public_path('uploads/categories') . '/' . $category->image);
-            }
-            $image = $request->file('image');
-            $file_extension = $request->file('image')->extension();
-            $file_name = Carbon::now()->timestamp . '.' . $file_extension;
-            $this->GenerateCategoryThumbailsImage($image, $file_name);
-            $category->image = $file_name;
-        }
+        $category->mobile = $request->mobile;
 
         $category->save();
         return redirect()->route('admin.categories')->with('status', 'Category has been updated successfully');
@@ -486,12 +461,14 @@ class AdminController extends Controller
         $product->delete();
         return redirect()->route('admin.products')->with('status', 'Product has been deleted successfully');
     }
-    public function contacts() {
+    public function contacts()
+    {
         $contacts = Contact::orderBy('created_at', 'DESC')->paginate(10);
         return view('admin.contacts', compact('contacts'));
     }
 
-    public function contact_delete($id) {
+    public function contact_delete($id)
+    {
         $contact = Contact::find($id);
         $contact->delete();
         return redirect()->route('admin.contacts')->with('status', 'Message delete successfully');

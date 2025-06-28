@@ -7,39 +7,42 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\AuthAdmin;
+use App\Http\Middleware\UserOnly;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 Auth::routes();
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/shop/{product_slug}', [ShopController::class, 'product_details'])->name('shop.product.details');
+// Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::middleware([UserOnly::class])->group(function () {
+    Route::get('/', [ShopController::class, 'index'])->name('shop.index');
+    Route::get('/shop/{product_slug}', [ShopController::class, 'product_details'])->name('shop.product.details');
 
-Route::get('/cart',[CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('cart.add');
-Route::put('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('cart.qty.increase');
-Route::put('/cart/decrease-quantity/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('cart.qty.decrease');
-Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove_item'])->name('cart.item.remove');
-Route::delete('/cart/clear', [CartController::class, 'empty_cart'])->name('cart.item.clear');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('cart.add');
+    Route::put('/cart/increase-quantity/{rowId}', [CartController::class, 'increase_cart_quantity'])->name('cart.qty.increase');
+    Route::put('/cart/decrease-quantity/{rowId}', [CartController::class, 'decrease_cart_quantity'])->name('cart.qty.decrease');
+    Route::delete('/cart/remove/{rowId}', [CartController::class, 'remove_item'])->name('cart.item.remove');
+    Route::delete('/cart/clear', [CartController::class, 'empty_cart'])->name('cart.item.clear');
 
-Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('/place-an-order', [CartController::class, 'place_an_order'])->name('cart.place.an.order');
-Route::get('/order-confirmation', [CartController::class, 'order_confirmation'])->name('cart.order.confirmation');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/place-an-order', [CartController::class, 'place_an_order'])->name('cart.place.an.order');
+    Route::get('/order-confirmation', [CartController::class, 'order_confirmation'])->name('cart.order.confirmation');
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/add', [WishlistController::class, 'add_to_wishlist'])->name('wishlist.add');
+    Route::delete('/wishlist/item/remove/{rowId}', [WishlistController::class, 'remove_item'])->name('wishlist.item.remove');
+    Route::delete('/wishlist/clear', [WishlistController::class, 'empty_wishlist'])->name('wishlist.item.clear');
+    Route::post('/wishlist/move-to-cart/{rowid}', [WishlistController::class, 'move_to_cart'])->name('wishlist.move.to.cart');
+});
 
 Route::get('/search', [HomeController::class, 'search'])->name('home.search');
 
-Route::get('/contact-us', [HomeController::class, 'contact'])->name('home.contact');
-Route::post('/contact/store', [HomeController::class, 'contact_store'])->name('home.contact.store');
+// Route::get('/contact-us', [HomeController::class, 'contact'])->name('home.contact');
+// Route::post('/contact/store', [HomeController::class, 'contact_store'])->name('home.contact.store');
 
 Route::get('/search', [HomeController::class, 'search'])->name('home.search');
-
-Route::post('/wishlist/add', [WishlistController::class, 'add_to_wishlist'])->name('wishlist.add');
-Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-Route::delete('/wishlist/item/remove/{rowId}', [WishlistController::class, 'remove_item'])->name('wishlist.item.remove');
-Route::delete('/wishlist/clear', [WishlistController::class, 'empty_wishlist'])->name('wishlist.item.clear');
-Route::post('/wishlist/move-to-cart/{rowid}', [WishlistController::class, 'move_to_cart'])->name('wishlist.move.to.cart');
 
 Route::middleware(['auth'])->group(function () {
     // ini bagian User Show Order and Order Details
@@ -50,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-Route::middleware(['auth',AuthAdmin::class])->group(function () {
+Route::middleware(['auth', AuthAdmin::class])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/vendors', [AdminController::class, 'vendors'])->name('admin.vendors');
     Route::get('/admin/vendor/add', [AdminController::class, 'add_vendor'])->name('admin.vendor.add');
@@ -81,7 +84,7 @@ Route::middleware(['auth',AuthAdmin::class])->group(function () {
     Route::delete('/admin/contact/{id}/delete', [AdminController::class, 'contact_delete'])->name('admin.contact.delete');
     //  ini bagian Admin Update Order Status
     Route::put('/admin/order/update-Status/{id}', [AdminController::class, 'update_order_status'])->name('admin.order.status.update');
-    
+
     Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
 });
 

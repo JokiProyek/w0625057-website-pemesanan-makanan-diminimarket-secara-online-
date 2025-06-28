@@ -128,12 +128,7 @@
                                             </a>
                                     </ul>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{route('admin.contacts')}}" class="">
-                                        <div class="icon"><i class="icon-mail"></i></div>
-                                        <div class="text">Messages</div>
-                                    </a>
-                                </li>
+
                                 <li class="menu-item">
                                     <a href="users.html" class="">
                                         <div class="icon"><i class="icon-user"></i></div>
@@ -172,7 +167,8 @@
                                 <form class="form-search flex-grow">
                                     <fieldset class="name">
                                         <input type="text" placeholder="Search here..." class="show-search" name="query"
-                                            tabindex="2" value="" aria-required="true" required="" id="search-input" required autocomplete="off">
+                                            tabindex="2" value="" aria-required="true" required="" id="search-input"
+                                            required autocomplete="off">
                                     </fieldset>
                                     <div class="button-submit">
                                         <button class="" type="submit"><i class="icon-search"></i></button>
@@ -271,14 +267,14 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end has-content"
                                             aria-labelledby="dropdownMenuButton3">
-                                            <li>
+                                            <!-- <li>
                                                 <a href="#" class="user-item">
                                                     <div class="icon">
                                                         <i class="icon-user"></i>
                                                     </div>
                                                     <div class="body-title-2">Account</div>
                                                 </a>
-                                            </li>
+                                            </li> -->
                                             <!-- <li>
                                                 <a href="#" class="user-item">
                                                     <div class="icon">
@@ -305,12 +301,15 @@
                                                 </a>
                                             </li> -->
                                             <li>
-                                                <a href="login.html" class="user-item">
-                                                    <div class="icon">
-                                                        <i class="icon-log-out"></i>
-                                                    </div>
-                                                    <div class="body-title-2">Log out</div>
-                                                </a>
+                                                <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                                    @csrf
+                                                    <button type="submit" class="user-item">
+                                                        <div class="icon">
+                                                            <i class="icon-log-out"></i>
+                                                        </div>
+                                                        <div class="body-title-2">Log out</div>
+                                                    </button>
+                                                </form>
                                             </li>
                                         </ul>
                                     </div>

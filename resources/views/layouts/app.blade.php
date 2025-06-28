@@ -321,13 +321,13 @@
       </a>
 
       {{-- Logo directory --}}
-      <!-- <div class="logo">
+      <div class="logo">
         <a href="{{route('shop.index')}}">
           <img src="{{ asset('assets/images/logo.png') }}" alt="Uomo" class="logo__image d-block" />
         </a>
-      </div> -->
+      </div>
 
-      <a href="#" class="header-tools__item header-tools__cart js-open-aside" data-aside="cartDrawer">
+      <a href="{{route('cart.index')}}" class="header-tools__item header-tools__cart" data-aside="cartDrawer">
         <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <use href="#icon_cart" />
         </svg>
@@ -365,9 +365,6 @@
         <div class="overflow-hidden">
           <ul class="navigation__list list-unstyled position-relative">
             <li class="navigation__item">
-              <a href="{{route('home.index')}}" class="navigation__link">Home</a>
-            </li>
-            <li class="navigation__item">
               <a href="{{route('shop.index')}}" class="navigation__link">Shop</a>
             </li>
             <li class="navigation__item">
@@ -376,9 +373,7 @@
             <!-- <li class="navigation__item">
               <a href="about.html" class="navigation__link">About</a>
             </li> -->
-            <li class="navigation__item">
-              <a href="{{route('home.contact')}}" class="navigation__link">Contact</a>
-            </li>
+
           </ul>
         </div>
       </div>
@@ -456,10 +451,6 @@
         <nav class="navigation">
           <ul class="navigation__list list-unstyled d-flex">
             <li class="navigation__item">
-              {{-- shop --}}
-              <a href="{{route('home.index')}}" class="navigation__link">Home</a>
-            </li>
-            <li class="navigation__item">
               <a href="{{route('shop.index')}}" class="navigation__link">Shop</a>
             </li>
             <li class="navigation__item">
@@ -468,9 +459,7 @@
             <!-- <li class="navigation__item">
               <a href="about.html" class="navigation__link">About</a>
             </li> -->
-            <li class="navigation__item">
-              <a href="{{route('home.contact')}}" class="navigation__link">Contact</a>
-            </li>
+
           </ul>
         </nav>
 
@@ -533,16 +522,6 @@
         </a>
         </div>
       @endguest
-
-          <a href="{{route('wishlist.index')}}" class="header-tools__item header-tools__cart">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <use href="#icon_heart" />
-            </svg>
-            @if(Cart::instance('wishlist')->content()->count() > 0)
-        <span
-          class="cart-amount d-block position-absolute js-cart-items-count">{{Cart::instance('wishlist')->content()->count()}}</span>
-      @endif
-          </a>
 
           <a href="{{route('cart.index')}}" class="header-tools__item header-tools__cart">
             <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"

@@ -46,6 +46,7 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Slug</th>
+                                <th>Mobile</th>
                                 <th>Products</th>
                                 <th>Action</th>
                             </tr>
@@ -55,14 +56,12 @@
                             <tr>
                                 <td>{{$category->id}}</td>
                                 <td class="pname">
-                                    <div class="image">
-                                        <img src="{{asset('uploads/categories')}}/{{ $category->image }}" alt="{{ $category->name }}" class="image">
-                                    </div>
                                     <div class="name">
-                                        <a href="#" class="body-title-2">{{ $category->name }}</a>
+                                        <a href="{{ route('admin.category.edit', $category->id) }}" class="body-title-2">{{ $category->name }}</a>
                                     </div>
                                 </td>
                                 <td>{{$category->slug}}</td>
+                                <td>{{$category->mobile}}</td>
                                 <td><a href="#" target="_blank">0</a></td>
                                 <td>
                                     <div class="list-icon-function">

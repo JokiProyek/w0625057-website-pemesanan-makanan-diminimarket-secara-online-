@@ -10,25 +10,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthAdmin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::check()) {
-            if(Auth::user()->utype === "ADM") {
-                return $next($request);
+        if (Auth::check()) {
+            if (Auth::user()->utype === "ADM") {
+                if ($request->is('admin') || $request->is('admin/*')) {
+                    return $next($request);
+                }
+
+                return redirect()->route('admin.index')->with('error', 'Admin tidak bisa mengakses halaman ini.');
             }
-            else {
-                Session::flush();
-                return redirect()->route('login');
-            }
-        }
-        else {
+
+            Session::flush();
             return redirect()->route('login');
         }
-        return $next($request);
+
+        return redirect()->route('login');
     }
 }
